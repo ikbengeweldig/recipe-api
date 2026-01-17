@@ -40,7 +40,7 @@ public class AddRecipeUseCaseAdapter implements AddRecipeUseCase {
                     .map(ingredientRepository::getOrCreateByName)
                     .toList();
 
-            Recipe recipe = new Recipe(null, addRecipeCommand.servings(), ingredients, addRecipeCommand.instructions());
+            Recipe recipe = new Recipe(null, addRecipeCommand.name(), addRecipeCommand.servings(), ingredients, addRecipeCommand.instructions());
 
             Recipe persistedRecipe = recipeRepository.save(recipe);
             return new AddRecipeSuccessResult(persistedRecipe);

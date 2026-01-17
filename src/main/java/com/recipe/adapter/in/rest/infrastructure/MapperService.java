@@ -25,4 +25,18 @@ public class MapperService {
                 .map(AbstractValue::value)
                 .orElse(null);
     }
+
+    public RecipeId mapToRecipeId(UUID id) {
+
+        return ofNullable(id)
+                .map(RecipeId::new)
+                .orElse(null);
+    }
+
+    public IngredientId mapToIngredientId(UUID id) {
+
+        return ofNullable(id)
+                .map(IngredientId::new)
+                .orElse(null);
+    }
 }

@@ -7,6 +7,7 @@ import com.recipe.domain.port.out.IngredientRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.Optional.ofNullable;
 
@@ -17,6 +18,7 @@ public class IngredientRepositoryJpaAdapter implements IngredientRepository {
     private final EntityManager entityManager;
 
     @Override
+    @Transactional
     public Ingredient getOrCreateByName(Ingredient ingredient) {
 
         IngredientJpaEntity alreadyPersisted = entityManager

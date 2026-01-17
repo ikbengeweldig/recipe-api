@@ -56,7 +56,10 @@ public class AddRecipeRestAdapterIT extends SpringScenarioTest<AddRecipeRestAdap
                 .instructions("boil for 40 minutes")
                 .ingredients(ingredients)
                 .build();
+
         when().i_add_a_new_recipe(addRecipeRequest);
+
+        then().recipe_has_an_id();
     }
 
     @JGivenStage

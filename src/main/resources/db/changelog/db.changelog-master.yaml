@@ -28,6 +28,17 @@ databaseChangeLog:
                   type: text
                   constraints:
                     nullable: false
+        - addUniqueConstraint:
+            tableName: recipe
+            columnNames: name
+            constraintName: uc_recipe_name
+
+        - createIndex:
+            tableName: recipe
+            indexName: ix_recipe_name
+            columns:
+              - column:
+                  name: name
 
   - changeSet:
       id: 001-create-ingredient
