@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:${PG_VERSION}
+    container_name: ${CONTAINER_PREFIX}-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
+      - TZ=${TZ}
+    shm_size: 128mb
+    restart: ${RESTART_POLICY}
+    networks:
+      - recipe
+
+  db-init:
+    image: postgres:${PG_VERSION}
+    depends_on:
+      - postgres
+    volumes:
+      - ./scripts/init-db.sh:/init-db.sh:ro
+    entrypoint: [ "bash", "/init-db.sh" ]
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
+      - TZ=${TZ}
+      - PGHOST=${CONTAINER_PREFIX}-postgres
+      - PGPORT=5432
+      - LIQUIBASE_USER=${LIQUIBASE_USER}
+      - LIQUIBASE_PASSWORD=${LIQUIBASE_PASSWORD}
+      - APP_USER=${APP_USER}
+      - APP_PASSWORD=${APP_PASSWORD}
+    networks:
+      - recipe
+
+volumes:
+  pgdata: null
+networks:
+  recipe:
+    name: recipe
+    driver: bridge

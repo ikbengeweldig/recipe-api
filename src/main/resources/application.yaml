@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: recipe-api
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+    hikari:
+      pool-name: rw-pool
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+logging:
+  level:
+    liquibase: INFO
+    org.springframework.boot.autoconfigure.liquibase: DEBUG
+

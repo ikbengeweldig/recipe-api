@@ -1,0 +1,20 @@
+type: object
+title: AddRecipeRequest
+description: add recipe request
+required:
+  - name
+  - servings
+  - ingredients
+  - instructions
+properties:
+  name:
+    type: string
+  servings:
+    type: integer
+    minimum: 1
+  ingredients:
+    type: array
+    items:
+      $ref: '../Ingredient.yaml'
+  instructions:
+    type: string

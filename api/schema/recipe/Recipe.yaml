@@ -1,0 +1,23 @@
+type: object
+title: Recipe
+required:
+  - servings
+  - ingredients
+  - instructions
+properties:
+  id:
+    type: string
+    format: uuid
+    description: identifier in UUID format
+  servings:
+    type: integer
+    minimum: 1
+    description: indicating how many people this recipe can serve
+  ingredients:
+    type: array
+    description: a list of ingredients used in this recipe
+    items:
+      $ref: './Ingredient.yaml'
+  instructions:
+    type: string
+    description: instructions as how to make this recipe

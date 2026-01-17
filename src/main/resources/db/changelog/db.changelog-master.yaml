@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-recipe
+      author: Khodabakhsh Bakhtiari
+      changes:
+        - createTable:
+            tableName: recipe
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: servings
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: instructions
+                  type: text
+                  constraints:
+                    nullable: false
