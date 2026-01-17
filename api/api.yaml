@@ -1,0 +1,55 @@
+openapi: 3.0.3
+
+info:
+  title: Recipe API
+  version: 1.0.0
+  description: API for add, remove, fetch, and search recipes
+
+servers:
+  - url: https://{host}
+    variables:
+      host:
+        default: demo.recipe.com
+        enum:
+          - demo.recipe.com
+          - localhost
+
+paths:
+
+  /api/rest/recipe:
+    post:
+      summary: adds a new recipe
+      tags:
+        - AddRecipe
+      operationId: add
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schema/recipe/add/AddRecipeRequest.yaml'
+      responses:
+        '200':
+          description: newly added recipe
+          content:
+            application/json:
+              schema:
+                $ref: './schema/recipe/add/AddRecipeResponse.yaml'
+        '400':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '401':
+          description: unauthorized (token missing or invalid)
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'

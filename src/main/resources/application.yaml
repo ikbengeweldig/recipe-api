@@ -10,3 +10,15 @@ spring:
 
     hikari:
       pool-name: rw-pool
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+    user: ${LIQUIBASE_USER}
+    password: ${LIQUIBASE_PASSWORD}
+    default-schema: ${POSTGRES_SCHEMA}

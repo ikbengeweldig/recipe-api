@@ -1,0 +1,16 @@
+type: object
+title: Ingredient
+required:
+  - name
+  - isVegetarian
+properties:
+  id:
+    type: string
+    format: uuid
+    description: identifier in UUID format
+  name:
+    type: string
+    description: name of the ingredient
+  isVegetarian:
+    type: boolean
+    description: whether this ingredient is vegetarian

@@ -1,12 +1,8 @@
 package com.recipe.domain.core;
 
-import lombok.Getter;
-
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-@Getter
 public record Recipe(RecipeId id, Integer servings, List<Ingredient> ingredients, String instructions) {
 
     public Recipe {

@@ -1,11 +1,8 @@
 package com.recipe.domain.core;
 
-import lombok.Getter;
-
 import java.util.Objects;
 import java.util.UUID;
 
-@Getter
 public record Ingredient(UUID id, String name, Boolean isVegetarian) {
 
     public Ingredient {

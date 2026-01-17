@@ -36,6 +36,5 @@ public class AddRecipeUseCase {
         } catch (Exception ex) {
             return new AddRecipeFailureResult("something went wrong, reason: %s".formatted(ex.getMessage()));
         }
-
     }
 }
