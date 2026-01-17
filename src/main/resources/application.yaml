@@ -3,9 +3,6 @@ spring:
     name: recipe-api
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
-    username: ${APP_USER}
-    password: ${APP_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
     hikari:
@@ -16,9 +13,10 @@ spring:
       ddl-auto: validate
 
   liquibase:
-    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
-    user: ${LIQUIBASE_USER}
-    password: ${LIQUIBASE_PASSWORD}
-    default-schema: ${POSTGRES_SCHEMA}
+
+logging:
+  level:
+    liquibase: INFO
+    org.springframework.boot.autoconfigure.liquibase: DEBUG
+

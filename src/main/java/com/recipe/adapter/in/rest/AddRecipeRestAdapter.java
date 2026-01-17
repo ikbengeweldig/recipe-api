@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RecipeRestAdapter implements AddRecipeApi {
+public class AddRecipeRestAdapter implements AddRecipeApi {
 
     @Override
     public ResponseEntity<AddRecipeResponse> add(AddRecipeRequest addRecipeRequest) {

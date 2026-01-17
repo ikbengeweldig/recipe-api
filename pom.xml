@@ -26,6 +26,7 @@
         <swagger-annotations-jakarta.version>2.2.41</swagger-annotations-jakarta.version>
 
         <!-- test -->
+        <jgiven-spring-junit5.version>2.0.3</jgiven-spring-junit5.version>
 
         <!-- plugins -->
         <openapi-generator-maven-plugin.version>7.18.0</openapi-generator-maven-plugin.version>
@@ -50,6 +51,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -68,15 +73,11 @@
             <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -93,6 +94,21 @@
             <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-liquibase-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-spring-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -103,6 +119,13 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger-annotations-jakarta.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.tngtech.jgiven</groupId>
+                <artifactId>jgiven-spring-junit5</artifactId>
+                <version>${jgiven-spring-junit5.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
