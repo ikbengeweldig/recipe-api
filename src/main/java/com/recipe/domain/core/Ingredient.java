@@ -3,7 +3,7 @@ package com.recipe.domain.core;
 import java.util.Objects;
 import java.util.UUID;
 
-public record Ingredient(UUID id, String name, Boolean isVegetarian) {
+public record Ingredient(IngredientId id, String name, Boolean isVegetarian) {
 
     public Ingredient {
 

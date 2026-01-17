@@ -1,4 +1,4 @@
-package com.recipe.domain.usecase.remove;
+package com.recipe.domain.remove;
 
 import java.util.UUID;
 

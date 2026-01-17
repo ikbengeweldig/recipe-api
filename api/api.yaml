@@ -29,7 +29,7 @@ paths:
             schema:
               $ref: './schema/recipe/add/AddRecipeRequest.yaml'
       responses:
-        '200':
+        '201':
           description: newly added recipe
           content:
             application/json:

@@ -1,4 +1,4 @@
-package com.recipe.domain.usecase.search;
+package com.recipe.domain.search;
 
 import com.recipe.domain.core.OperationResult;
 

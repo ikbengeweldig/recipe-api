@@ -1,14 +1,16 @@
-package com.recipe.domain.core.usecase;
+package com.recipe.adapter.in.usecase;
 
-import com.recipe.domain.usecase.add.AddRecipeCommand;
-import com.recipe.domain.usecase.add.AddRecipeFailureResult;
-import com.recipe.domain.usecase.add.AddRecipeResult;
-import com.recipe.domain.usecase.add.AddRecipeSuccessResult;
+import com.recipe.domain.add.AddRecipeCommand;
+import com.recipe.domain.add.AddRecipeFailureResult;
+import com.recipe.domain.add.AddRecipeResult;
+import com.recipe.domain.add.AddRecipeSuccessResult;
 import com.recipe.domain.core.Ingredient;
 import com.recipe.domain.core.Recipe;
-import com.recipe.domain.port.IngredientRepository;
-import com.recipe.domain.port.RecipeRepository;
+import com.recipe.domain.port.in.AddRecipeUseCase;
+import com.recipe.domain.port.out.IngredientRepository;
+import com.recipe.domain.port.out.RecipeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,18 +19,27 @@ import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
+@Component
 @RequiredArgsConstructor
-public class AddRecipeUseCase {
+public class AddRecipeUseCaseAdapter implements AddRecipeUseCase {
 
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
 
+    @Override
     public AddRecipeResult add(AddRecipeCommand addRecipeCommand) {
 
         try {
             Objects.requireNonNull(addRecipeCommand, "command cannot be null");
 
-            List<Ingredient> ingredients = ofNullable(addRecipeCommand).map(AddRecipeCommand::ingredients).map(Collection::stream).orElseGet(Stream::of).map(ingredientRepository::getOrCreateByName).toList();
+            List<Ingredient> ingredients = ofNullable(addRecipeCommand)
+                    .map(AddRecipeCommand::ingredients)
+                    .map(Collection::stream)
+                    .orElseGet(Stream::of)
+                    .map(arg -> new Ingredient(null, arg.name(), arg.isVegetarian()))
+                    .map(ingredientRepository::getOrCreateByName)
+                    .toList();
+
             Recipe recipe = new Recipe(null, addRecipeCommand.servings(), ingredients, addRecipeCommand.instructions());
 
             Recipe persistedRecipe = recipeRepository.save(recipe);

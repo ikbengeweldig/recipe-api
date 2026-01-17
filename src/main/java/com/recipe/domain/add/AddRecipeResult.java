@@ -1,4 +1,4 @@
-package com.recipe.domain.usecase.add;
+package com.recipe.domain.add;
 
 import com.recipe.domain.core.OperationResult;
 

@@ -1,4 +1,4 @@
-package com.recipe.domain.usecase.add;
+package com.recipe.domain.add;
 
 public record AddRecipeFailureResult(String reason) implements AddRecipeResult {
 
