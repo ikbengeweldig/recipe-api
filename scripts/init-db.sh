@@ -1,0 +1,92 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[init-db] starting…"
+
+export PGPASSWORD="${POSTGRES_PASSWORD}"
+
+POSTGRES_SCHEMA="${POSTGRES_SCHEMA:-public}"
+
+echo "[init-db] waiting for postgres at ${PGHOST}:${PGPORT}…"
+for i in {1..60}; do
+  if pg_isready -h "$PGHOST" -p "$PGPORT" -U "$POSTGRES_USER" >/dev/null 2>&1; then
+    break
+  fi
+  echo "still waiting ($i)…"
+  sleep 2
+done
+
+echo "[init-db] ensure database ${POSTGRES_DB} exists"
+psql -h "$PGHOST" -p "$PGPORT" -U "$POSTGRES_USER" -d postgres -v ON_ERROR_STOP=1 <<SQL
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${POSTGRES_DB}') THEN
+    EXECUTE format('CREATE DATABASE %I', '${POSTGRES_DB}');
+  END IF;
+END
+\$\$;
+SQL
+
+echo "[init-db] creating schema ${POSTGRES_SCHEMA}"
+psql -h "$PGHOST" -p "$PGPORT" -U "$POSTGRES_USER" -d "${POSTGRES_DB}" -v ON_ERROR_STOP=1 <<SQL
+CREATE SCHEMA IF NOT EXISTS "${POSTGRES_SCHEMA}";
+SQL
+
+echo "[init-db] creating roles and permissions"
+
+psql -h "$PGHOST" -p "$PGPORT" -U "$POSTGRES_USER" -d "${POSTGRES_DB}" -v ON_ERROR_STOP=1 <<SQL
+
+-- Create Liquibase user (DDL rights)
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${LIQUIBASE_USER}') THEN
+    CREATE USER ${LIQUIBASE_USER} WITH PASSWORD '${LIQUIBASE_PASSWORD}';
+  END IF;
+END
+\$\$;
+
+-- Create Application user (DML only)
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${APP_USER}') THEN
+    CREATE USER ${APP_USER} WITH PASSWORD '${APP_PASSWORD}';
+  END IF;
+END
+\$\$;
+
+-- Liquibase permissions
+GRANT USAGE ON SCHEMA "${POSTGRES_SCHEMA}" TO ${LIQUIBASE_USER};
+GRANT CREATE ON SCHEMA "${POSTGRES_SCHEMA}" TO ${LIQUIBASE_USER};
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA "${POSTGRES_SCHEMA}" TO ${LIQUIBASE_USER};
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA "${POSTGRES_SCHEMA}" TO ${LIQUIBASE_USER};
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA "${POSTGRES_SCHEMA}"
+  GRANT ALL ON TABLES TO ${LIQUIBASE_USER};
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA "${POSTGRES_SCHEMA}"
+  GRANT ALL ON SEQUENCES TO ${LIQUIBASE_USER};
+
+-- Application permissions (read/write only)
+GRANT USAGE ON SCHEMA "${POSTGRES_SCHEMA}" TO ${APP_USER};
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+  ON ALL TABLES IN SCHEMA "${POSTGRES_SCHEMA}" TO ${APP_USER};
+
+GRANT USAGE, SELECT
+  ON ALL SEQUENCES IN SCHEMA "${POSTGRES_SCHEMA}" TO ${APP_USER};
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA "${POSTGRES_SCHEMA}"
+  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ${APP_USER};
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA "${POSTGRES_SCHEMA}"
+  GRANT USAGE, SELECT ON SEQUENCES TO ${APP_USER};
+
+SQL
+
+echo "[init-db] setting search_path"
+psql -h "$PGHOST" -p "$PGPORT" -U "$POSTGRES_USER" -d "${POSTGRES_DB}" -v ON_ERROR_STOP=1 <<SQL
+ALTER DATABASE "${POSTGRES_DB}" SET search_path = "${POSTGRES_SCHEMA}";
+SQL
+
+echo "[init-db] done"
