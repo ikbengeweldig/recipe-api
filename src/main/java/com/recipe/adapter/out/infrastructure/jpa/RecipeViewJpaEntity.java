@@ -20,8 +20,8 @@ import java.util.UUID;
 @Setter
 @Entity
 @ToString
-@Table(name = "recipe")
-public class RecipeJpaEntity {
+@Table(name = "recipe_with_vegetarian_flag")
+public class RecipeViewJpaEntity {
 
     @Id
     @GeneratedValue
@@ -36,6 +36,9 @@ public class RecipeJpaEntity {
 
     @Column(nullable = false, columnDefinition = "text")
     private String instructions;
+
+    @Column(nullable = false)
+    private Boolean isVegetarian;
 
     @ManyToMany
     @JoinTable(

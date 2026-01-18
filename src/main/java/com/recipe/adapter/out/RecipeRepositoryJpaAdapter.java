@@ -1,6 +1,7 @@
 package com.recipe.adapter.out;
 
 import com.recipe.adapter.out.infrastructure.jpa.RecipeJpaEntity;
+import com.recipe.adapter.out.infrastructure.jpa.RecipeViewJpaEntity;
 import com.recipe.adapter.out.infrastructure.mapper.RecipeJpaEntityMapper;
 import com.recipe.domain.core.IngredientId;
 import com.recipe.domain.core.Recipe;
@@ -82,13 +83,13 @@ public class RecipeRepositoryJpaAdapter implements RecipeRepository {
             return emptyList();
         }
 
-        List<RecipeJpaEntity> entities = entityManager
+        List<RecipeViewJpaEntity> entities = entityManager
                 .createQuery("""
                                      SELECT DISTINCT r
-                                     FROM RecipeJpaEntity r
+                                     FROM RecipeViewJpaEntity r
                                      LEFT JOIN FETCH r.ingredients
                                      WHERE r.id IN :IDS
-                                     """, RecipeJpaEntity.class)
+                                     """, RecipeViewJpaEntity.class)
                 .setParameter("IDS", ids)
                 .getResultList();
 
