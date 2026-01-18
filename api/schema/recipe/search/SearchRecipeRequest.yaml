@@ -1,0 +1,23 @@
+type: object
+title: SearchRecipeRequest
+description: search recipe request
+properties:
+  name:
+    type: string
+  isVegetarian:
+    type: boolean
+  servings:
+    type: integer
+    minimum: 1
+  includingIngredients:
+    type: array
+    items:
+      type: string
+      format: uuid
+  excludingIngredients:
+    type: array
+    items:
+      type: string
+      format: uuid
+  instructions:
+    type: string

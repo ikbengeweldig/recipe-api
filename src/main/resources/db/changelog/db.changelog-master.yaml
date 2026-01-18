@@ -1,24 +1,10 @@
 databaseChangeLog:
-  - changeSet:
-      id: 001-create-recipe
-      author: Khodabakhsh Bakhtiari
-      changes:
-        - createTable:
-            tableName: recipe
-            columns:
-              - column:
-                  name: id
-                  type: uuid
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: servings
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: instructions
-                  type: text
-                  constraints:
-                    nullable: false
+
+  - include:
+      file: db/changelog/001-schema.yaml
+
+  - include:
+      file: db/changelog/001-initial-data.yaml
+
+  - include:
+      file: db/changelog/001-initial-view.yaml

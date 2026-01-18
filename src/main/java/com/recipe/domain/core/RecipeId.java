@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class RecipeId extends AbstractValue<UUID> {
 
-    protected RecipeId(UUID value) {
+    public RecipeId(UUID value) {
         super(value);
         Objects.requireNonNull(value, "id cannot be null");
     }

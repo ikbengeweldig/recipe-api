@@ -1,0 +1,6 @@
+type: object
+title: RetrieveRecipeResponse
+description: retrieve recipe response
+
+allOf:
+  - $ref: '../Recipe.yaml'

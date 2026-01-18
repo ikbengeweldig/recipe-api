@@ -1,0 +1,13 @@
+spring:
+
+  datasource:
+    url: jdbc:postgresql://recipe-postgres:5432/${POSTGRES_DB}
+    username: ${APP_USER}
+    password: ${APP_PASSWORD}
+
+  liquibase:
+    url: jdbc:postgresql://recipe-postgres:5432/${POSTGRES_DB}
+    user: ${LIQUIBASE_USER}
+    password: ${LIQUIBASE_PASSWORD}
+    default-schema: ${POSTGRES_SCHEMA}
+    contexts: prod

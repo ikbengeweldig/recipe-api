@@ -9,6 +9,9 @@ properties:
     type: string
     format: uuid
     description: identifier in UUID format
+  name:
+    type: string
+    description: name of the dish
   servings:
     type: integer
     minimum: 1
