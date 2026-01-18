@@ -18,6 +18,7 @@
 
     <properties>
         <java.version>25</java.version>
+        <start-class>com.recipe.RecipeApiApplication</start-class>
 
         <!-- dependency -->
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -29,6 +30,7 @@
         <jgiven-spring-junit5.version>2.0.3</jgiven-spring-junit5.version>
 
         <!-- plugins -->
+        <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
         <openapi-generator-maven-plugin.version>7.18.0</openapi-generator-maven-plugin.version>
     </properties>
 
@@ -227,6 +229,30 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
+                <configuration>
+                    <from>
+                        <image>openjdk:25-ea-jdk-slim</image>
+                    </from>
+                    <to>
+                        <image>${project.artifactId}:${project.version}</image>
+                    </to>
+                    <container>
+                        <mainClass>${start-class}</mainClass>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                        <environment>
+                            <SPRING_PROFILES_ACTIVE>prod</SPRING_PROFILES_ACTIVE>
+                        </environment>
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                    </container>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -15,6 +15,8 @@
     <springProfile name="local">
 
         <logger name="com.recipe" level="DEBUG"/>
+        <logger name="liquibase" level="INFO"/>
+        <logger name="org.springframework.boot.autoconfigure.liquibase" level="DEBUG"/>
         <root level="WARN">
             <appender-ref ref="CONSOLE"/>
         </root>
@@ -24,6 +26,8 @@
     <springProfile name="it">
 
         <logger name="com.recipe" level="DEBUG"/>
+        <logger name="liquibase" level="INFO"/>
+        <logger name="org.springframework.boot.autoconfigure.liquibase" level="DEBUG"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>

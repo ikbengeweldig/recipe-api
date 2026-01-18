@@ -13,12 +13,13 @@ services:
       - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
       - TZ=${TZ}
     shm_size: 128mb
-    restart: ${RESTART_POLICY}
+    restart: always
     networks:
       - recipe
 
   db-init:
     image: postgres:${PG_VERSION}
+    container_name: db-init
     depends_on:
       - postgres
     volumes:
@@ -38,6 +39,22 @@ services:
       - APP_PASSWORD=${APP_PASSWORD}
     networks:
       - recipe
+
+  app:
+    image: recipe-api:0.0.1-SNAPSHOT
+    container_name: recipe-api
+    env_file:
+      - .env
+    profiles:
+      - prod
+    depends_on:
+      - postgres
+      - db-init
+    ports:
+      - "8080:8080"
+    networks:
+      - recipe
+    mem_limit: 1g
 
 volumes:
   pgdata: null
