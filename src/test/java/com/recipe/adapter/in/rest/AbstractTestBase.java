@@ -1,5 +1,6 @@
 package com.recipe.adapter.in.rest;
 
+import com.recipe.TestcontainersConfiguration;
 import com.recipe.api.model.AddRecipeRequest;
 import com.recipe.api.model.AddRecipeResponse;
 import com.recipe.api.model.Ingredient;
@@ -14,16 +15,18 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import org.junit.jupiter.api.AfterAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.test.web.servlet.client.StatusAssertions;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -35,8 +38,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @EnableJGiven
 @Testcontainers
+@Transactional
 @SpringBootTest
+@ActiveProfiles("it")
 @AutoConfigureRestTestClient
+@Import(TestcontainersConfiguration.class)
 @ComponentScan(includeFilters = @ComponentScan.Filter(value = JGivenStage.class))
 public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W extends AbstractTestBase.WhenStage, T extends AbstractTestBase.ThenStage> extends SpringScenarioTest<G, W, T> {
 
@@ -58,16 +64,6 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
             .instructions("boil for 40 minutes")
             .ingredients(List.of(ING_LENTILS, ING_TOMATO))
             .build();
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18.1");
-
-    @AfterAll
-    static void afterAll() {
-
-        postgres.stop();
-    }
 
     public static class GivenStage<G extends AbstractTestBase.GivenStage<G>> extends Stage<G> {
 

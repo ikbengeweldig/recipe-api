@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 class DeleteRecipeRestAdapterIT extends AbstractTestBase<DeleteRecipeRestAdapterIT.GivenStage, DeleteRecipeRestAdapterIT.WhenStage, DeleteRecipeRestAdapterIT.ThenStage> {
 
     @Test
-    void successful_get_recipe() {
+    void successful_delete_recipe() {
 
         given().i_have_a_recipe_to_add(REC_LENTILS_SOUP);
         when().i_add_my_new_recipe();
