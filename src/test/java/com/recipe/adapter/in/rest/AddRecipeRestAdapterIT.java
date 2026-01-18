@@ -7,48 +7,34 @@ import com.recipe.api.rest.AddRecipeApi;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
-import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@EnableJGiven
-@Testcontainers
-@SpringBootTest
-@AutoConfigureRestTestClient
-@ComponentScan(includeFilters = @ComponentScan.Filter(value = JGivenStage.class))
-public class AddRecipeRestAdapterIT extends SpringScenarioTest<AddRecipeRestAdapterIT.GivenStage, AddRecipeRestAdapterIT.WhenStage, AddRecipeRestAdapterIT.ThenStage> {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18.1");
+public class AddRecipeRestAdapterIT extends AbstractTestBase<AddRecipeRestAdapterIT.GivenStage, AddRecipeRestAdapterIT.WhenStage, AddRecipeRestAdapterIT.ThenStage> {
 
     @Test
     void successful_add_recipe() throws Exception {
 
-        List<Ingredient> ingredients = List.of(Ingredient
+        Ingredient lentils = Ingredient
                 .builder()
                 .name("lentils")
                 .isVegetarian(true)
-                .build(), Ingredient
+                .build();
+        Ingredient tomato = Ingredient
                 .builder()
                 .name("tomato")
                 .isVegetarian(true)
-                .build());
+                .build();
+        List<Ingredient> ingredients = List.of(lentils, tomato);
+
         AddRecipeRequest addRecipeRequest = AddRecipeRequest
                 .builder()
                 .name("soup")
@@ -59,7 +45,20 @@ public class AddRecipeRestAdapterIT extends SpringScenarioTest<AddRecipeRestAdap
 
         when().i_add_a_new_recipe(addRecipeRequest);
 
-        then().recipe_has_an_id();
+        then()
+                .recipe_has_an_id()
+                .and()
+                .ingredients_have_ids()
+                .and()
+                .recipe_has_name(addRecipeRequest.getName())
+                .and()
+                .recipe_has_servings(addRecipeRequest.getServings())
+                .and()
+                .recipe_has_instructions(addRecipeRequest.getInstructions())
+                .and()
+                .recipe_has_ingredient(lentils)
+                .and()
+                .recipe_has_ingredient(tomato);
     }
 
     @JGivenStage
@@ -100,6 +99,50 @@ public class AddRecipeRestAdapterIT extends SpringScenarioTest<AddRecipeRestAdap
 
             assertThat(addRecipeResponse).isNotNull();
             assertThat(addRecipeResponse.getId()).isNotNull();
+            return self();
+        }
+
+        public ThenStage ingredients_have_ids() {
+
+            assertThat(addRecipeResponse).isNotNull();
+            boolean anyNullId = addRecipeResponse
+                    .getIngredients()
+                    .stream()
+                    .map(Ingredient::getId)
+                    .anyMatch(Objects::isNull);
+            assertThat(anyNullId).isFalse();
+            return self();
+        }
+
+        public ThenStage recipe_has_name(String name) {
+
+            assertThat(addRecipeResponse).isNotNull();
+            assertThat(addRecipeResponse.getName()).isEqualTo(name);
+            return self();
+        }
+
+        public ThenStage recipe_has_servings(int servings) {
+
+            assertThat(addRecipeResponse).isNotNull();
+            assertThat(addRecipeResponse.getServings()).isEqualTo(servings);
+            return self();
+        }
+
+        public ThenStage recipe_has_instructions(String instructions) {
+
+            assertThat(addRecipeResponse).isNotNull();
+            assertThat(addRecipeResponse.getInstructions()).isEqualTo(instructions);
+            return self();
+        }
+
+        public ThenStage recipe_has_ingredient(Ingredient ingredient) {
+
+            assertThat(addRecipeResponse).isNotNull();
+            assertThat(addRecipeResponse.getIngredients()).anyMatch(arg -> ingredient
+                    .getName()
+                    .equals(arg.getName()) && ingredient
+                    .getIsVegetarian()
+                    .equals(arg.getIsVegetarian()));
             return self();
         }
     }

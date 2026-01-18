@@ -53,3 +53,78 @@ paths:
             application/json:
               schema:
                 $ref: './schema/generic/ErrorResponse.yaml'
+
+  /api/rest/recipe/{recipeId}:
+    delete:
+      summary: removes a recipe
+      tags:
+        - RemoveRecipe
+      operationId: remove
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: recipe identifier
+      responses:
+        '204':
+          description: recipe was removed successfully
+        '400':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '401':
+          description: unauthorized (token missing or invalid)
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+
+    get:
+      summary: retrieves a recipe
+      tags:
+        - RetrieveRecipe
+      operationId: retrieve
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: recipe identifier
+      responses:
+        '200':
+          description: recipe was retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: './schema/recipe/retrieve/RetrieveRecipeResponse.yaml'
+        '400':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '401':
+          description: unauthorized (token missing or invalid)
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
