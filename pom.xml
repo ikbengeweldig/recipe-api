@@ -206,6 +206,9 @@
                             <generateModelTests>false</generateModelTests>
                             <apiPackage>com.recipe.api.rest</apiPackage>
                             <modelPackage>com.recipe.api.model</modelPackage>
+                            <openapiNormalizer>
+                                REF_AS_PARENT_IN_ALLOF=true
+                            </openapiNormalizer>
                             <configOptions>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <configPackage>com.recipe.api.config</configPackage>
@@ -216,9 +219,7 @@
                                 <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
                                 <additionalModelTypeAnnotations>
                                     @lombok.Data
-                                    @lombok.Builder
-                                    @lombok.NoArgsConstructor
-                                    @lombok.AllArgsConstructor
+                                    @lombok.experimental.SuperBuilder
                                 </additionalModelTypeAnnotations>
                                 <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                             </configOptions>

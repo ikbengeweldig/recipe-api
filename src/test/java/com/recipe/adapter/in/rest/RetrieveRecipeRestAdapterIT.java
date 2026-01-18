@@ -3,15 +3,16 @@ package com.recipe.adapter.in.rest;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.junit.jupiter.api.Test;
 
-class AddRecipeRestAdapterIT extends AbstractTestBase<AddRecipeRestAdapterIT.GivenStage, AddRecipeRestAdapterIT.WhenStage, AddRecipeRestAdapterIT.ThenStage> {
+class RetrieveRecipeRestAdapterIT extends AbstractTestBase<RetrieveRecipeRestAdapterIT.GivenStage, RetrieveRecipeRestAdapterIT.WhenStage, RetrieveRecipeRestAdapterIT.ThenStage> {
 
     @Test
-    void successful_add_recipe() {
+    void successful_get_recipe() {
 
         given().i_have_a_recipe_to_add(REC_LENTILS_SOUP);
-
         when().i_add_my_new_recipe();
+        then().recipe_has_an_id();
 
+        when().i_retrieve_my_recipe_with_id();
         then()
                 .recipe_has_an_id()
                 .and()
@@ -28,6 +29,7 @@ class AddRecipeRestAdapterIT extends AbstractTestBase<AddRecipeRestAdapterIT.Giv
                 .recipe_has_ingredient(ING_TOMATO);
     }
 
+
     @JGivenStage
     public static class GivenStage extends AbstractTestBase.GivenStage<GivenStage> {
     }
@@ -37,6 +39,6 @@ class AddRecipeRestAdapterIT extends AbstractTestBase<AddRecipeRestAdapterIT.Giv
     }
 
     @JGivenStage
-    public static class ThenStage extends AbstractTestBase.ThenStage<ThenStage> {
+    public static class ThenStage extends AbstractTestBase.ThenStage<RetrieveRecipeRestAdapterIT.ThenStage> {
     }
 }

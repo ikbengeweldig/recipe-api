@@ -10,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 @Repository
 @RequiredArgsConstructor
 public class RecipeRepositoryJpaAdapter implements RecipeRepository {
@@ -31,5 +35,12 @@ public class RecipeRepositoryJpaAdapter implements RecipeRepository {
     @Override
     public boolean remove(RecipeId recipeId) {
         return false;
+    }
+
+    @Override
+    public Optional<Recipe> findRecipeById(RecipeId recipeId) {
+
+        RecipeJpaEntity recipeJpaEntity = entityManager.find(RecipeJpaEntity.class, recipeId.value());
+        return ofNullable(recipeJpaEntity).map(recipeJpaEntityMapper::toDomain);
     }
 }
