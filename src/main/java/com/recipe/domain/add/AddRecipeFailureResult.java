@@ -1,5 +1,7 @@
 package com.recipe.domain.add;
 
-public record AddRecipeFailureResult(String reason) implements AddRecipeResult {
+import com.recipe.domain.core.RecipeException;
+
+public record AddRecipeFailureResult(RecipeException recipeException) implements AddRecipeResult {
 
 }

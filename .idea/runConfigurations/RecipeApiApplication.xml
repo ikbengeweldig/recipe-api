@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RecipeApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="local" />
     <option name="ALTERNATIVE_JRE_PATH" value="openjdk-25" />
     <module name="recipe-api" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.recipe.RecipeApiApplication" />

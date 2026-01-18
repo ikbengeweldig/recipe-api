@@ -6,6 +6,7 @@ import com.recipe.domain.add.AddRecipeResult;
 import com.recipe.domain.add.AddRecipeSuccessResult;
 import com.recipe.domain.core.Ingredient;
 import com.recipe.domain.core.Recipe;
+import com.recipe.domain.core.RecipeException;
 import com.recipe.domain.port.in.AddRecipeUseCase;
 import com.recipe.domain.port.out.IngredientRepository;
 import com.recipe.domain.port.out.RecipeRepository;
@@ -45,7 +46,7 @@ public class AddRecipeUseCaseAdapter implements AddRecipeUseCase {
             Recipe persistedRecipe = recipeRepository.save(recipe);
             return new AddRecipeSuccessResult(persistedRecipe);
         } catch (Exception ex) {
-            return new AddRecipeFailureResult("something went wrong, message: %s".formatted(ex.getMessage()));
+            return new AddRecipeFailureResult(new RecipeException("something went wrong, message: %s".formatted(ex.getMessage())));
         }
     }
 }

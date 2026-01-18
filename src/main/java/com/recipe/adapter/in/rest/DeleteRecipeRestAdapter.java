@@ -30,7 +30,7 @@ public class DeleteRecipeRestAdapter implements DeleteRecipeApi {
             case DeleteRecipeSuccessResult ignore -> ResponseEntity
                     .status(HttpStatus.NO_CONTENT)
                     .build();
-            case DeleteRecipeFailureResult ignore -> null;
+            case DeleteRecipeFailureResult deleteRecipeFailureResult -> throw deleteRecipeFailureResult.recipeException();
             default -> throw new IllegalStateException();
         };
     }

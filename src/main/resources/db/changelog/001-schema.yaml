@@ -1,0 +1,138 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-recipe
+      author: Khodabakhsh Bakhtiari
+      changes:
+        - createTable:
+            tableName: recipe
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_recipe
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: servings
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: instructions
+                  type: text
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: recipe
+            columnNames: name
+            constraintName: uc_recipe_name
+
+        - createIndex:
+            tableName: recipe
+            indexName: ix_recipe_name
+            columns:
+              - column:
+                  name: name
+
+  - changeSet:
+      id: 001-create-ingredient
+      author: Khodabakhsh Bakhtiari
+      changes:
+        - createTable:
+            tableName: ingredient
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_ingredient
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_vegetarian
+                  type: boolean
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: ingredient
+            columnNames: name
+            constraintName: uc_ingredient_name
+
+        - createIndex:
+            tableName: ingredient
+            indexName: ix_ingredient_name
+            columns:
+              - column:
+                  name: name
+
+      rollback:
+        - dropTable:
+            tableName: ingredient
+
+  - changeSet:
+      id: 001-create-recipe-ingredient
+      author: Khodabakhsh Bakhtiari
+      changes:
+        - createTable:
+            tableName: recipe_ingredient
+            columns:
+              - column:
+                  name: recipe_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ingredient_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            tableName: recipe_ingredient
+            columnNames: recipe_id, ingredient_id
+            constraintName: pk_recipe_ingredient
+
+        - addForeignKeyConstraint:
+            baseTableName: recipe_ingredient
+            baseColumnNames: recipe_id
+            referencedTableName: recipe
+            referencedColumnNames: id
+            constraintName: fk_recipe_ingredient_recipe
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: recipe_ingredient
+            baseColumnNames: ingredient_id
+            referencedTableName: ingredient
+            referencedColumnNames: id
+            constraintName: fk_recipe_ingredient_ingredient
+            onDelete: RESTRICT
+
+        - createIndex:
+            tableName: recipe_ingredient
+            indexName: ix_recipe_ingredient_recipe_id
+            columns:
+              - column:
+                  name: recipe_id
+
+        - createIndex:
+            tableName: recipe_ingredient
+            indexName: ix_recipe_ingredient_ingredient_id
+            columns:
+              - column:
+                  name: ingredient_id
+
+      rollback:
+        - dropTable:
+            tableName: recipe_ingredient

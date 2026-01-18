@@ -1,0 +1,8 @@
+type: object
+title: SearchRecipeResponse
+description: search recipe response
+properties:
+  recipes:
+    type: array
+    items:
+      $ref: '../Recipe.yaml'

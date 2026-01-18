@@ -37,7 +37,7 @@ public class AddRecipeRestAdapter implements AddRecipeApi {
             case AddRecipeSuccessResult addRecipeSuccessResult -> ResponseEntity
                     .created(null)
                     .body(addRecipeResponseMapper.fromRecipe(addRecipeSuccessResult.recipe()));
-            case AddRecipeFailureResult addRecipeFailureResult -> null;
+            case AddRecipeFailureResult addRecipeFailureResult -> throw addRecipeFailureResult.recipeException();
             default -> throw new IllegalStateException();
         };
     }

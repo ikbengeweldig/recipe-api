@@ -1,0 +1,202 @@
+# NOTE: AI generated
+databaseChangeLog:
+  - changeSet:
+      id: 002-initial-data
+      author: Khodabakhsh Bakhtiari
+      changes:
+
+        # --- Ingredients ---
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "f5f9fe9e-8205-46af-b084-2d090b520037" }
+              - column: { name: name, value: "Tomato" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "2b59b736-f89d-42bf-a29c-473ebf49e405" }
+              - column: { name: name, value: "Pasta" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "a8295570-a77a-411e-9193-4e2388bfec1f" }
+              - column: { name: name, value: "Garlic" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "07d1b972-4392-4b74-bcd2-1a756f679a28" }
+              - column: { name: name, value: "Olive Oil" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "94416267-97d3-4e23-a25a-ee35884c3108" }
+              - column: { name: name, value: "Basil" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "b64038d7-bd5b-4398-aa55-80fe82b8a335" }
+              - column: { name: name, value: "Chicken" }
+              - column: { name: is_vegetarian, valueBoolean: false }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "35cdd1e9-0d73-4c03-a7f0-79d7948f820f" }
+              - column: { name: name, value: "Onion" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "1506cecb-b010-4c24-b13a-9faa5017b022" }
+              - column: { name: name, value: "Curry Powder" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "197bfb1f-8aaa-4aee-8fdc-1dab129e7844" }
+              - column: { name: name, value: "Kidney Beans" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        - insert:
+            tableName: ingredient
+            columns:
+              - column: { name: id, value: "c97afb3c-c445-4ae8-9632-34725eb93d8c" }
+              - column: { name: name, value: "Chili Powder" }
+              - column: { name: is_vegetarian, valueBoolean: true }
+
+        # --- Recipes ---
+        - insert:
+            tableName: recipe
+            columns:
+              - column: { name: id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: name, value: "Spaghetti Pomodoro" }
+              - column: { name: servings, valueNumeric: 2 }
+              - column:
+                  name: instructions
+                  value: "Boil pasta. Cook tomato + garlic in olive oil. Toss together and finish with basil."
+
+        - insert:
+            tableName: recipe
+            columns:
+              - column: { name: id, value: "15c49aa9-04a2-47f9-ad20-fc43c4e0d786" }
+              - column: { name: name, value: "Chicken Curry" }
+              - column: { name: servings, valueNumeric: 4 }
+              - column:
+                  name: instructions
+                  value: "Saute onion and garlic. Add chicken and curry powder. Simmer until cooked through."
+
+        - insert:
+            tableName: recipe
+            columns:
+              - column: { name: id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: name, value: "Veggie Chili" }
+              - column: { name: servings, valueNumeric: 4 }
+              - column:
+                  name: instructions
+                  value: "Cook onion and garlic. Add beans, chili powder and tomatoes. Simmer and season."
+
+        # --- Recipe <-> Ingredient links ---
+        # Spaghetti Pomodoro
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: ingredient_id, value: "2b59b736-f89d-42bf-a29c-473ebf49e405" } # Pasta
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: ingredient_id, value: "f5f9fe9e-8205-46af-b084-2d090b520037" } # Tomato
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: ingredient_id, value: "a8295570-a77a-411e-9193-4e2388bfec1f" } # Garlic
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: ingredient_id, value: "07d1b972-4392-4b74-bcd2-1a756f679a28" } # Olive Oil
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "f1c8705a-e2b0-4858-ad93-9e114759677b" }
+              - column: { name: ingredient_id, value: "94416267-97d3-4e23-a25a-ee35884c3108" } # Basil
+
+        # Chicken Curry
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "15c49aa9-04a2-47f9-ad20-fc43c4e0d786" }
+              - column: { name: ingredient_id, value: "b64038d7-bd5b-4398-aa55-80fe82b8a335" } # Chicken
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "15c49aa9-04a2-47f9-ad20-fc43c4e0d786" }
+              - column: { name: ingredient_id, value: "35cdd1e9-0d73-4c03-a7f0-79d7948f820f" } # Onion
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "15c49aa9-04a2-47f9-ad20-fc43c4e0d786" }
+              - column: { name: ingredient_id, value: "a8295570-a77a-411e-9193-4e2388bfec1f" } # Garlic
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "15c49aa9-04a2-47f9-ad20-fc43c4e0d786" }
+              - column: { name: ingredient_id, value: "1506cecb-b010-4c24-b13a-9faa5017b022" } # Curry Powder
+
+        # Veggie Chili
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: ingredient_id, value: "35cdd1e9-0d73-4c03-a7f0-79d7948f820f" } # Onion
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: ingredient_id, value: "a8295570-a77a-411e-9193-4e2388bfec1f" } # Garlic
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: ingredient_id, value: "197bfb1f-8aaa-4aee-8fdc-1dab129e7844" } # Kidney Beans
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: ingredient_id, value: "c97afb3c-c445-4ae8-9632-34725eb93d8c" } # Chili Powder
+
+        - insert:
+            tableName: recipe_ingredient
+            columns:
+              - column: { name: recipe_id, value: "3b5764ac-f5e1-4143-9e2a-488cb9a37678" }
+              - column: { name: ingredient_id, value: "f5f9fe9e-8205-46af-b084-2d090b520037" } # Tomato
+
+      rollback:
+        # order matters because of FKs
+        - delete: { tableName: recipe_ingredient }
+        - delete: { tableName: recipe }
+        - delete: { tableName: ingredient }

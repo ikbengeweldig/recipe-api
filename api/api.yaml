@@ -128,3 +128,42 @@ paths:
             application/json:
               schema:
                 $ref: './schema/generic/ErrorResponse.yaml'
+
+  /api/rest/recipe/search:
+
+    post:
+      summary: retrieves a list of recipes based on given criteria
+      tags:
+        - RetrieveRecipe
+      operationId: search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './schema/recipe/search/SearchRecipeRequest.yaml'
+      responses:
+        '200':
+          description: recipe list was retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: './schema/recipe/search/SearchRecipeResponse.yaml'
+        '400':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '401':
+          description: unauthorized (token missing or invalid)
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: './schema/generic/ErrorResponse.yaml'

@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-recipe-vegetarian-view
+      author: Khodabakhsh Bakhtiari
+      changes:
+        - sql:
+            sql: |
+              CREATE OR REPLACE VIEW recipe_with_vegetarian_flag AS
+              SELECT
+                  r.id,
+                  r.name,
+                  r.servings,
+                  r.instructions,
+                  NOT EXISTS (
+                      SELECT 1
+                      FROM recipe_ingredient ri
+                      JOIN ingredient i
+                        ON ri.ingredient_id = i.id
+                      WHERE ri.recipe_id = r.id
+                        AND i.is_vegetarian = false
+                  ) AS is_vegetarian
+              FROM recipe r;
+
+      rollback:
+        - sql:
+            sql: DROP VIEW IF EXISTS recipe_with_vegetarian_flag;
