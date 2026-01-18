@@ -12,7 +12,11 @@ class RetrieveRecipeRestAdapterIT extends AbstractTestBase<RetrieveRecipeRestAda
         when().i_add_my_new_recipe();
         then().recipe_has_an_id();
 
-        when().i_retrieve_my_recipe_with_id();
+        when()
+                .i_retrieve_my_recipe_with_id()
+                .and()
+                .the_recipe_is_returned_successfully();
+
         then()
                 .recipe_has_an_id()
                 .and()
@@ -29,16 +33,15 @@ class RetrieveRecipeRestAdapterIT extends AbstractTestBase<RetrieveRecipeRestAda
                 .recipe_has_ingredient(ING_TOMATO);
     }
 
-
     @JGivenStage
     public static class GivenStage extends AbstractTestBase.GivenStage<GivenStage> {
     }
 
     @JGivenStage
-    public static class WhenStage extends AbstractTestBase.WhenStage {
+    public static class WhenStage extends AbstractTestBase.WhenStage<WhenStage> {
     }
 
     @JGivenStage
-    public static class ThenStage extends AbstractTestBase.ThenStage<RetrieveRecipeRestAdapterIT.ThenStage> {
+    public static class ThenStage extends AbstractTestBase.ThenStage<ThenStage> {
     }
 }

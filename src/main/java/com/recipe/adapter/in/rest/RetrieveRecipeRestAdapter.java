@@ -34,7 +34,7 @@ public class RetrieveRecipeRestAdapter implements RetrieveRecipeApi {
                 RetrieveRecipeResponse retrieveRecipeResponse = retrieveRecipeResponseMapper.fromRecipe(successResult.recipe());
                 yield ResponseEntity.ok(retrieveRecipeResponse);
             }
-            case GetRecipeFailureResult failureResult -> null;
+            case GetRecipeFailureResult failureResult -> throw failureResult.recipeException();
             default -> throw new IllegalStateException();
         };
     }

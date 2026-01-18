@@ -1,4 +1,6 @@
 package com.recipe.domain.get;
 
-public record GetRecipeFailureResult(String reason) implements GetRecipeResult {
+import com.recipe.domain.core.RecipeException;
+
+public record GetRecipeFailureResult(RecipeException recipeException) implements GetRecipeResult {
 }

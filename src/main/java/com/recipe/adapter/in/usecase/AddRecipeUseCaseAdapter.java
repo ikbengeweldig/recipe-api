@@ -45,7 +45,7 @@ public class AddRecipeUseCaseAdapter implements AddRecipeUseCase {
             Recipe persistedRecipe = recipeRepository.save(recipe);
             return new AddRecipeSuccessResult(persistedRecipe);
         } catch (Exception ex) {
-            return new AddRecipeFailureResult("something went wrong, reason: %s".formatted(ex.getMessage()));
+            return new AddRecipeFailureResult("something went wrong, message: %s".formatted(ex.getMessage()));
         }
     }
 }

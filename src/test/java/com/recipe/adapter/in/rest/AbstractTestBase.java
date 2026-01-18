@@ -6,6 +6,7 @@ import com.recipe.api.model.Ingredient;
 import com.recipe.api.model.Recipe;
 import com.recipe.api.model.RetrieveRecipeResponse;
 import com.recipe.api.rest.AddRecipeApi;
+import com.recipe.api.rest.DeleteRecipeApi;
 import com.recipe.api.rest.RetrieveRecipeApi;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
@@ -19,8 +20,10 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.test.web.servlet.client.StatusAssertions;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -89,6 +92,12 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
         @ProvidedScenarioState
         private Recipe recipe;
 
+        @ProvidedScenarioState
+        private StatusAssertions statusAssertions;
+
+        @ProvidedScenarioState
+        private RestTestClient.ResponseSpec lastRetrieveResponse;
+
         public W i_add_my_new_recipe() {
 
             restTestClient
@@ -104,12 +113,39 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
 
         public W i_retrieve_my_recipe_with_id() {
 
-            restTestClient
+            lastRetrieveResponse = restTestClient
                     .get()
                     .uri(RetrieveRecipeApi.PATH_RETRIEVE, recipe.getId())
-                    .exchange()
+                    .exchange();
+            return self();
+        }
+
+        public W the_recipe_is_returned_successfully() {
+
+            lastRetrieveResponse
+                    .expectStatus()
+                    .isOk()
                     .expectBody(RetrieveRecipeResponse.class)
                     .value(arg -> recipe = arg);
+
+            return self();
+        }
+
+        public W the_recipe_is_not_found() {
+
+            lastRetrieveResponse
+                    .expectStatus()
+                    .isNotFound();
+            return self();
+        }
+
+        public W i_delete_my_recipe() {
+
+            statusAssertions = restTestClient
+                    .delete()
+                    .uri(DeleteRecipeApi.PATH_DELETE, recipe.getId())
+                    .exchange()
+                    .expectStatus();
             return self();
         }
     }
@@ -118,6 +154,9 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
 
         @ExpectedScenarioState
         protected Recipe recipe;
+
+        @ExpectedScenarioState
+        private StatusAssertions statusAssertions;
 
         public T recipe_has_an_id() {
 
@@ -167,6 +206,13 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
                     .equals(arg.getName()) && ingredient
                     .getIsVegetarian()
                     .equals(arg.getIsVegetarian()));
+            return self();
+        }
+
+        public T http_status_is(HttpStatus httpStatus) {
+
+            statusAssertions.isEqualTo(httpStatus);
+
             return self();
         }
     }

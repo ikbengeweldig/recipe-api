@@ -9,7 +9,7 @@ public interface RecipeRepository {
 
     Recipe save(Recipe recipe);
 
-    boolean remove(RecipeId recipeId);
+    boolean delete(RecipeId recipeId);
 
     Optional<Recipe> findRecipeById(RecipeId recipeId);
 }

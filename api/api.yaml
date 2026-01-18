@@ -3,7 +3,7 @@ openapi: 3.0.3
 info:
   title: Recipe API
   version: 1.0.0
-  description: API for add, remove, fetch, and search recipes
+  description: API for add, delete, fetch, and search recipes
 
 servers:
   - url: https://{host}
@@ -56,10 +56,10 @@ paths:
 
   /api/rest/recipe/{recipeId}:
     delete:
-      summary: removes a recipe
+      summary: deletes a recipe
       tags:
-        - RemoveRecipe
-      operationId: remove
+        - DeleteRecipe
+      operationId: delete
       parameters:
         - in: path
           name: recipeId
@@ -70,7 +70,7 @@ paths:
           description: recipe identifier
       responses:
         '204':
-          description: recipe was removed successfully
+          description: recipe was deleted successfully
         '400':
           description: invalid request
           content:

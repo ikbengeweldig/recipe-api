@@ -33,7 +33,7 @@ class AddRecipeRestAdapterIT extends AbstractTestBase<AddRecipeRestAdapterIT.Giv
     }
 
     @JGivenStage
-    public static class WhenStage extends AbstractTestBase.WhenStage {
+    public static class WhenStage extends AbstractTestBase.WhenStage<WhenStage> {
     }
 
     @JGivenStage

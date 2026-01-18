@@ -1,5 +1,6 @@
 package com.recipe.adapter.in.usecase;
 
+import com.recipe.domain.core.RecipeNotFoundException;
 import com.recipe.domain.get.GetRecipeByIdCommand;
 import com.recipe.domain.get.GetRecipeFailureResult;
 import com.recipe.domain.get.GetRecipeResult;
@@ -22,6 +23,9 @@ public class GetRecipeUseCaseAdapter implements GetRecipeUseCase {
                 .findRecipeById(getRecipeByIdCommand.recipeId())
                 .map(GetRecipeSuccessResult::new)
                 .map(GetRecipeResult.class::cast)
-                .orElseGet(() -> new GetRecipeFailureResult("recipe was not found"));
+                .orElseGet(() -> {
+                    String message = "recipe not found with id: %s".formatted(getRecipeByIdCommand.recipeId());
+                    return new GetRecipeFailureResult(new RecipeNotFoundException(message));
+                });
     }
 }

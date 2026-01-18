@@ -15,6 +15,7 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class RecipeRepositoryJpaAdapter implements RecipeRepository {
 
@@ -23,7 +24,6 @@ public class RecipeRepositoryJpaAdapter implements RecipeRepository {
     private final RecipeJpaEntityMapper recipeJpaEntityMapper;
 
     @Override
-    @Transactional
     public Recipe save(Recipe recipe) {
 
         RecipeJpaEntity toPersist = recipeJpaEntityMapper.fromDomain(recipe);
@@ -33,14 +33,26 @@ public class RecipeRepositoryJpaAdapter implements RecipeRepository {
     }
 
     @Override
-    public boolean remove(RecipeId recipeId) {
-        return false;
+    public boolean delete(RecipeId recipeId) {
+
+        return Optional
+                .ofNullable(recipeId)
+                .map(this::find)
+                .map(recipe -> {
+                    entityManager.remove(recipe);
+                    return true;
+                })
+                .orElse(false);
     }
 
     @Override
     public Optional<Recipe> findRecipeById(RecipeId recipeId) {
 
-        RecipeJpaEntity recipeJpaEntity = entityManager.find(RecipeJpaEntity.class, recipeId.value());
-        return ofNullable(recipeJpaEntity).map(recipeJpaEntityMapper::toDomain);
+        return ofNullable(find(recipeId)).map(recipeJpaEntityMapper::toDomain);
+    }
+
+    private RecipeJpaEntity find(RecipeId recipeId) {
+
+        return entityManager.find(RecipeJpaEntity.class, recipeId.value());
     }
 }
