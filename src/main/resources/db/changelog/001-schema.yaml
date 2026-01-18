@@ -136,3 +136,38 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: recipe_ingredient
+
+  - changeSet:
+      id: 001-grant-app-read-write
+      author: Khodabakhsh Bakhtiari
+      context: local,prod
+      changes:
+        - sql:
+            sql: |
+              GRANT SELECT, INSERT, UPDATE, DELETE
+                ON ALL TABLES IN SCHEMA recipe
+                TO recipe_app;
+
+              GRANT USAGE, SELECT, UPDATE
+                ON ALL SEQUENCES IN SCHEMA recipe
+                TO recipe_app;
+
+              GRANT SELECT
+                ON ALL TABLES IN SCHEMA recipe
+                TO recipe_app;
+
+              ALTER DEFAULT PRIVILEGES IN SCHEMA recipe
+                GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO recipe_app;
+
+              ALTER DEFAULT PRIVILEGES IN SCHEMA recipe
+                GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO recipe_app;
+      rollback:
+        - sql:
+            sql: |
+              REVOKE SELECT, INSERT, UPDATE, DELETE
+                ON ALL TABLES IN SCHEMA recipe
+                FROM recipe_app;
+
+              REVOKE USAGE, SELECT, UPDATE
+                ON ALL SEQUENCES IN SCHEMA recipe
+                FROM recipe_app;

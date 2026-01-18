@@ -10,3 +10,4 @@ spring:
     user: ${LIQUIBASE_USER}
     password: ${LIQUIBASE_PASSWORD}
     default-schema: ${POSTGRES_SCHEMA}
+    contexts: local

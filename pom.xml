@@ -221,7 +221,8 @@
                                     @lombok.Data
                                     @lombok.experimental.SuperBuilder
                                 </additionalModelTypeAnnotations>
-                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
+                                <generateConstructorWithAllArgs>true</generateConstructorWithAllArgs>
+                                <generatedConstructorWithRequiredArgs>true</generatedConstructorWithRequiredArgs>
                             </configOptions>
                         </configuration>
                     </execution>

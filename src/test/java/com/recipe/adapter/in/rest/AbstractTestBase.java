@@ -5,6 +5,8 @@ import com.recipe.api.model.AddRecipeResponse;
 import com.recipe.api.model.Ingredient;
 import com.recipe.api.model.Recipe;
 import com.recipe.api.model.RetrieveRecipeResponse;
+import com.recipe.api.model.SearchRecipeRequest;
+import com.recipe.api.model.SearchRecipeResponse;
 import com.recipe.api.rest.AddRecipeApi;
 import com.recipe.api.rest.DeleteRecipeApi;
 import com.recipe.api.rest.RetrieveRecipeApi;
@@ -15,6 +17,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,12 +46,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ComponentScan(includeFilters = @ComponentScan.Filter(value = JGivenStage.class))
 public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W extends AbstractTestBase.WhenStage, T extends AbstractTestBase.ThenStage> extends SpringScenarioTest<G, W, T> {
 
-    protected static final Ingredient ING_LENTILS = Ingredient.builder().name("lentils").isVegetarian(true).build();
-    protected static final Ingredient ING_TOMATO = Ingredient.builder().name("tomato").isVegetarian(true).build();
+    protected static final Ingredient ING_LENTILS = Ingredient.builder()
+                                                              .name("lentils")
+                                                              .isVegetarian(true)
+                                                              .build();
+    protected static final Ingredient ING_TOMATO = Ingredient.builder()
+                                                             .name("tomato")
+                                                             .isVegetarian(true)
+                                                             .build();
 
-    protected static final AddRecipeRequest REC_LENTILS_SOUP = AddRecipeRequest.builder().name("lentils soup").servings(4)
+    protected static final AddRecipeRequest REC_LENTILS_SOUP = AddRecipeRequest.builder()
+                                                                               .name("lentils soup")
+                                                                               .servings(4)
                                                                                .instructions("boil for 40 minutes")
-                                                                               .ingredients(List.of(ING_LENTILS, ING_TOMATO)).build();
+                                                                               .ingredients(List.of(ING_LENTILS, ING_TOMATO))
+                                                                               .build();
 
     public static class GivenStage<G extends AbstractTestBase.GivenStage<G>> extends Stage<G> {
 
@@ -74,15 +86,23 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
         private Recipe recipe;
 
         @ProvidedScenarioState
+        private List<Recipe> recipes;
+
+        @ProvidedScenarioState
         private StatusAssertions statusAssertions;
 
         @ProvidedScenarioState
-        private RestTestClient.ResponseSpec lastRetrieveResponse;
+        private LastResponses lastResponses = new LastResponses();
 
         public W i_add_my_new_recipe() {
 
-            restTestClient.post().uri(AddRecipeApi.PATH_ADD).contentType(MediaType.APPLICATION_JSON).body(addRecipeRequest).exchange()
-                          .expectBody(AddRecipeResponse.class).value(arg -> {
+            restTestClient.post()
+                          .uri(AddRecipeApi.PATH_ADD)
+                          .contentType(MediaType.APPLICATION_JSON)
+                          .body(addRecipeRequest)
+                          .exchange()
+                          .expectBody(AddRecipeResponse.class)
+                          .value(arg -> {
                               assertThat(arg).isNotNull();
                               recipe = arg;
                           });
@@ -91,26 +111,61 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
 
         public W i_retrieve_my_recipe_with_id() {
 
-            lastRetrieveResponse = restTestClient.get().uri(RetrieveRecipeApi.PATH_RETRIEVE, recipe.getId()).exchange();
+
+            var lastRetrieveResponse = restTestClient.get()
+                                                     .uri(RetrieveRecipeApi.PATH_RETRIEVE, recipe.getId())
+                                                     .exchange();
+            lastResponses.setRetrieve(lastRetrieveResponse);
+            return self();
+        }
+
+        public W i_search_for_recipes(SearchRecipeRequest request) {
+
+            var lastSearchResponse = restTestClient.post()
+                                                   .uri(RetrieveRecipeApi.PATH_SEARCH)
+                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                   .body(request)
+                                                   .exchange();
+            lastResponses.setSearch(lastSearchResponse);
             return self();
         }
 
         public W the_recipe_is_returned_successfully() {
 
-            lastRetrieveResponse.expectStatus().isOk().expectBody(RetrieveRecipeResponse.class).value(arg -> recipe = arg);
+            lastResponses.getRetrieve()
+                         .expectStatus()
+                         .isOk()
+                         .expectBody(RetrieveRecipeResponse.class)
+                         .value(arg -> recipe = arg);
+
+            return self();
+        }
+
+        public W the_recipe_list_retrieved_successfully() {
+
+            lastResponses.getSearch()
+                         .expectStatus()
+                         .isOk()
+                         .expectBody(SearchRecipeResponse.class)
+                         .value(arg -> recipes = arg.getRecipes());
 
             return self();
         }
 
         public W the_recipe_is_not_found() {
 
-            lastRetrieveResponse.expectStatus().isNotFound();
+            lastResponses.getRetrieve()
+                         .expectStatus()
+                         .isNotFound();
             return self();
         }
 
         public W i_delete_my_recipe() {
 
-            statusAssertions = restTestClient.delete().uri(DeleteRecipeApi.PATH_DELETE, recipe.getId()).exchange().expectStatus();
+            statusAssertions = restTestClient.delete()
+                                             .uri(DeleteRecipeApi.PATH_DELETE, recipe.getId())
+                                             .exchange()
+                                             .expectStatus();
             return self();
         }
     }
@@ -119,6 +174,9 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
 
         @ExpectedScenarioState
         protected Recipe recipe;
+
+        @ExpectedScenarioState
+        protected List<Recipe> recipes;
 
         @ExpectedScenarioState
         private StatusAssertions statusAssertions;
@@ -133,7 +191,10 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
         public T ingredients_have_ids() {
 
             assertThat(recipe).isNotNull();
-            boolean anyNullId = recipe.getIngredients().stream().map(Ingredient::getId).anyMatch(Objects::isNull);
+            boolean anyNullId = recipe.getIngredients()
+                                      .stream()
+                                      .map(Ingredient::getId)
+                                      .anyMatch(Objects::isNull);
             assertThat(anyNullId).isFalse();
             return self();
         }
@@ -162,9 +223,9 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
         public T recipe_has_ingredient(Ingredient ingredient) {
 
             assertThat(recipe).isNotNull();
-            assertThat(recipe.getIngredients()).anyMatch(arg -> ingredient.getName().toLowerCase()
-                                                                          .equals(arg.getName().toLowerCase()) && ingredient.getIsVegetarian()
-                                                                                                                            .equals(arg.getIsVegetarian()));
+            assertThat(recipe.getIngredients()).anyMatch(arg -> ingredient.getName()
+                                                                          .equalsIgnoreCase(arg.getName()) && ingredient.getIsVegetarian()
+                                                                                                                        .equals(arg.getIsVegetarian()));
             return self();
         }
 
@@ -174,5 +235,28 @@ public abstract class AbstractTestBase<G extends AbstractTestBase.GivenStage, W 
 
             return self();
         }
+
+        public T recipe_list_has_size(int expectedSize) {
+
+            assertThat(recipes).hasSize(expectedSize);
+
+            return self();
+        }
+
+        public T recipe_list_has_one_with_name(String expectedName) {
+
+            assertThat(recipes).anyMatch(arg -> arg.getName()
+                                                   .equalsIgnoreCase(expectedName));
+
+            return self();
+        }
+    }
+
+    @Data
+    public static class LastResponses {
+
+        RestTestClient.ResponseSpec retrieve;
+
+        RestTestClient.ResponseSpec search;
     }
 }
